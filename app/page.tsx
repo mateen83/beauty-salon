@@ -131,6 +131,7 @@ export default function Home() {
     phone: '',
     service: '',
     date: '',
+    time: '',
     message: '',
   });
 
@@ -142,17 +143,25 @@ export default function Home() {
     setCurrentTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length);
   };
 
-  const handleBooking = (e: React.FormEvent) => {
-    e.preventDefault();
+ const handleBooking = (e: React.FormEvent) => {
+  e.preventDefault();
 
-    const message = `New Salon Booking\n\nName: ${formData.name}\nPhone: ${formData.phone}\nService: ${formData.service}\nDate: ${formData.date}\nMessage: ${formData.message || 'No additional message'}`;
+  const message = `New Salon Booking
+Name: ${formData.name}
+Phone: ${formData.phone}
+Service: ${formData.service}
+Date: ${formData.date}
+Time: ${formData.time || 'No time selected'}  
+Message: ${formData.message || 'No additional message'}`;
 
-    const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/923089340529?text=${encodedMessage}`;
+  const encodedMessage = encodeURIComponent(message);
+  const whatsappUrl = `https://wa.me/923089340529?text=${encodedMessage}`;
 
-    window.open(whatsappUrl, '_blank');
-    setFormData({ name: '', phone: '', service: '', date: '', message: '' });
-  };
+  window.open(whatsappUrl, '_blank');
+
+  // Reset form including time
+  setFormData({ name: '', phone: '', service: '', date: '', time: '', message: '' });
+};
 
   return (
     <main>
@@ -442,91 +451,112 @@ export default function Home() {
       </section>
 
       {/* Booking Section */}
-      <section id="booking" className="py-12 md:py-20 px-4 bg-background">
-        <div className="max-w-2xl mx-auto">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif text-center mb-8 md:mb-12 text-foreground">
-            Book Your Appointment
-          </h2>
+  <section id="booking" className="py-12 md:py-20 px-4 bg-background">
+  <div className="max-w-2xl mx-auto">
+    <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif text-center mb-8 md:mb-12 text-foreground">
+      Book Your Appointment
+    </h2>
 
-          <Card className="bg-card">
-            <CardContent className="p-8">
-              <form onSubmit={handleBooking} className="space-y-6">
-                <div>
-                  <label className="block text-sm font-semibold mb-2 text-foreground">Name</label>
-                  <Input
-                    type="text"
-                    placeholder="Your full name"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    required
-                    className="border-border bg-background text-foreground"
-                  />
-                </div>
+    <Card className="bg-card">
+      <CardContent className="p-8">
+        <form onSubmit={handleBooking} className="space-y-6">
+          <div>
+            <label className="block text-sm font-semibold mb-2 text-foreground">Name</label>
+            <Input
+              type="text"
+              placeholder="Your full name"
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              required
+              className="border-border bg-background text-foreground"
+            />
+          </div>
 
-                <div>
-                  <label className="block text-sm font-semibold mb-2 text-foreground">Phone Number</label>
-                  <Input
-                    type="tel"
-                    placeholder="Your phone number"
-                    value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    required
-                    className="border-border bg-background text-foreground"
-                  />
-                </div>
+          <div>
+            <label className="block text-sm font-semibold mb-2 text-foreground">Phone Number</label>
+            <Input
+              type="tel"
+              placeholder="Your phone number"
+              value={formData.phone}
+              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+              required
+              className="border-border bg-background text-foreground"
+            />
+          </div>
 
-                <div>
-                  <label className="block text-sm font-semibold mb-2 text-foreground">Service</label>
-                  <Select value={formData.service} onValueChange={(value) => setFormData({ ...formData, service: value })}>
-                    <SelectTrigger className="border-border bg-background text-foreground">
-                      <SelectValue placeholder="Select a service" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {services.flatMap((group) =>
-                        group.items.map((service) => (
-                          <SelectItem key={service.name} value={service.name}>
-                            {service.name}
-                          </SelectItem>
-                        ))
-                      )}
-                    </SelectContent>
-                  </Select>
-                </div>
+          <div>
+            <label className="block text-sm font-semibold mb-2 text-foreground">Service</label>
+            <Select value={formData.service} onValueChange={(value) => setFormData({ ...formData, service: value })}>
+              <SelectTrigger className="border-border bg-background text-foreground">
+                <SelectValue placeholder="Select a service" />
+              </SelectTrigger>
+              <SelectContent>
+                {services.flatMap((group) =>
+                  group.items.map((service) => (
+                    <SelectItem key={service.name} value={service.name}>
+                      {service.name}
+                    </SelectItem>
+                  ))
+                )}
+              </SelectContent>
+            </Select>
+          </div>
 
-                <div>
-                  <label className="block text-sm font-semibold mb-2 text-foreground">Preferred Date</label>
-                  <Input
-                    type="date"
-                    value={formData.date}
-                    onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                    required
-                    className="border-border bg-background text-foreground"
-                  />
-                </div>
+          <div>
+            <label className="block text-sm font-semibold mb-2 text-foreground">Preferred Date</label>
+            <Input
+              type="date"
+              value={formData.date}
+              onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+              required
+              className="border-border bg-background text-foreground"
+            />
+          </div>
 
-                <div>
-                  <label className="block text-sm font-semibold mb-2 text-foreground">Message (Optional)</label>
-                  <Textarea
-                    placeholder="Any additional details or requests..."
-                    value={formData.message}
-                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    className="border-border bg-background text-foreground resize-none"
-                    rows={4}
-                  />
-                </div>
+          {/* NEW Preferred Time */}
+          <div>
+            <label className="block text-sm font-semibold mb-2 text-foreground">Preferred Time</label>
+            <Select value={formData.time} onValueChange={(value) => setFormData({ ...formData, time: value })}>
+              <SelectTrigger className="border-border bg-background text-foreground">
+                <SelectValue placeholder="Select a time" />
+              </SelectTrigger>
+              <SelectContent>
+                {[
+                  "1:00 AM", "11:30 AM", "12:00 PM", "12:30 PM", "1:00 PM", "1:30 PM",
+                  "2:00 PM", "2:30 PM", "3:00 PM", "3:30 PM", "4:00 PM", "4:30 PM",
+                  "5:00 PM", "5:30 PM", "6:00 PM", "6:30 PM", "7:00 PM", "7:30 PM", "8:00 PM"
+                ].map((time) => (
+                  <SelectItem key={time} value={time}>
+                    {time}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
 
-                <Button
-                  type="submit"
-                  size="lg"
-                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold cursor-pointer"
-                >
-                  Book Appointment via WhatsApp
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
+          <div>
+            <label className="block text-sm font-semibold mb-2 text-foreground">Message (Optional)</label>
+            <Textarea
+              placeholder="Any additional details or requests..."
+              value={formData.message}
+              onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+              className="border-border bg-background text-foreground resize-none"
+              rows={4}
+            />
+          </div>
+
+          <Button
+            type="submit"
+            size="lg"
+            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold cursor-pointer"
+          >
+            Book Appointment via WhatsApp
+          </Button>
+        </form>
+      </CardContent>
+    </Card>
+  </div>
+</section>
 
       {/* Location Section */}
       <section className="py-12 md:py-20 px-4 bg-secondary/20">
